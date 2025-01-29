@@ -81,22 +81,42 @@ class _MyAppState extends State<MyApp> {
 }
 
 // HomePage 레이아웃
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key, this.data});
 
   final data;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  var scroll = ScrollController(); // controller
+
+  @override
+  void initState() { // scroll 출력
+    super.initState();
+    scroll.addListener(() {
+      print(scroll.position.pixels);
+      if(scroll.position.pixels == scroll.position.maxScrollExtent) {
+        // scroll 얼만큼 ? == 가능한 스크롤 얼만큼 남았는지 > 맨 밑
+
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if(data.isNotEmpty) { // isNotEmpty = 데이터가 오지 않은 경우
-      return ListView.builder(itemCount: 3, itemBuilder: (c, i) {
+    if(widget.data.isNotEmpty) { // isNotEmpty = 데이터가 오지 않은 경우
+      return ListView.builder(itemCount: 3, controller: scroll, itemBuilder: (c, i) { // scroll 얼만큼?
         return Column( // return이 왜 존재해야 하는지?
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(data[i]['image']),
-            Text('좋아요 : ${data[i]['likes']}'),
-            Text('글쓴이 : ${data[i]['user']} '),
-            Text('글내용 : ${data[i]['content']} '),
+            Image.network(widget.data[i]['image']),
+            Text('좋아요 : ${widget.data[i]['likes']}'),
+            Text('글쓴이 : ${widget.data[i]['user']} '),
+            Text('글내용 : ${widget.data[i]['content']} '),
           ],
         );
       });
