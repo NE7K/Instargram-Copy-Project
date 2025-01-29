@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import './style.dart' as style;
+import './style.dart' as style; // style에서 파일 가져오겠읍니다
 
 void main() {
   runApp(
       MaterialApp(
-        theme: style.theme,
+          theme: style.theme, // style 가져와서 적용시킬게요
           home:  MyApp()
       )
   );
@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  var tab = 0;
+  var tab = 0; // tab state 상태 저장 함수
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,9 @@ class _MyAppState extends State<MyApp> {
             IconButton(onPressed: () {}, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
-      body: [Text('홈페이지'), Text('검색창')][tab],
+      body: [HomePage(), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false,
+        showSelectedLabels: false, // tab 눌렀을 때 라벨 글자 나오지 않게 설정
         showUnselectedLabels: false,
         onTap: (i) {
           setState(() {
@@ -49,11 +49,33 @@ class _MyAppState extends State<MyApp> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈페이지'),
           BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: '검색창'),
-          // BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined), label: ''),
-          // BottomNavigationBarItem(icon: Icon(Icons.video_library_outlined), label: ''),
-          // BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: '')
+          BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined), label: '추가'),
+          // BottomNavigationBarItem(icon: Icon(Icons.video_library_outlined), label: '릴스'),
+          // BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: '사용자')
         ],
       )
     );
+  }
+}
+
+// HomePage 레이아웃
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  // var itemCount 자리
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(itemCount: 3, itemBuilder: (c, i) {
+      return Column( // return이 왜 존재해야 하는지?
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Image.asset('assets/images/test.jpg'),
+          Text('이미지'),
+          Text('좋아요'),
+          Text('내용')
+        ],
+      );
+    });
   }
 }
