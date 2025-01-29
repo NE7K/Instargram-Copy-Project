@@ -10,8 +10,15 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  var tab = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -30,28 +37,23 @@ class MyApp extends StatelessWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.home_outlined)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.search_rounded)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.add_box_outlined)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.video_library_outlined)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.person_outline)),
-          ],
-        )
-      ),
+      body: [Text('홈페이지'), Text('검색창')][tab],
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: (i) {
+          setState(() {
+            tab = i;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈페이지'),
+          BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: '검색창'),
+          // BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined), label: ''),
+          // BottomNavigationBarItem(icon: Icon(Icons.video_library_outlined), label: ''),
+          // BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: '')
+        ],
+      )
     );
-  }
-}
-
-// Bottom Appbar
-class bottomUI extends StatelessWidget {
-  const bottomUI({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

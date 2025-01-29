@@ -4,8 +4,8 @@ var theme = ThemeData(
     appBarTheme: AppBarTheme(
         color: Colors.white
     ),
-    bottomAppBarTheme: BottomAppBarTheme(
-        color: Colors.white
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedItemColor: Colors.black
     )
 );
 
