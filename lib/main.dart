@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
     var result2 = jsonDecode(result.body);
     setState(() {
       data = result2;
+      print(data);
     });
   }
 
@@ -87,16 +88,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    if(data.isnotEmpty) {
+    if(data.isNotEmpty) { // isNotEmpty = 데이터가 오지 않은 경우
       return ListView.builder(itemCount: 3, itemBuilder: (c, i) {
         return Column( // return이 왜 존재해야 하는지?
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(data[i]['image']),
-            Text(data[i]['likes'].toString()),
-            Text('글쓴이'),
-            Text('글내용')
+            Text('좋아요 : ${data[i]['likes']}'),
+            Text('글쓴이 : ${data[i]['user']} '),
+            Text('글내용 : ${data[i]['content']} '),
           ],
         );
       });
