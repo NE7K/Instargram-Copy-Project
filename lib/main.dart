@@ -32,14 +32,19 @@ class _MyAppState extends State<MyApp> {
     var result2 = jsonDecode(result.body);
     setState(() {
       data = result2;
-      print(data);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    getData(); // 앱 실행하면 data 뜯어오기
+  }
+
+  addData(a) {
+    setState(() {
+      data.add(a); // data[]에 자료 추가
+    });
   }
 
   @override
@@ -59,7 +64,7 @@ class _MyAppState extends State<MyApp> {
             IconButton(onPressed: () {}, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
-      body: [HomePage(data : data), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
+      body: [HomePage(data : data, addData : addData), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false, // tab 눌렀을 때 라벨 글자 나오지 않게 설정
         showUnselectedLabels: false,
@@ -82,9 +87,10 @@ class _MyAppState extends State<MyApp> {
 
 // HomePage 레이아웃
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, this.data});
+  const HomePage({super.key, this.data, this.addData});
 
   final data;
+  final addData;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -94,14 +100,32 @@ class _HomePageState extends State<HomePage> {
 
   var scroll = ScrollController(); // controller
 
+  var addlist = []; // 추가할 데이터 정보
+
+  var isLoading = false; // 더보기 로딩 이어지는 오류 방지
+
+  getMore() async { // async await은 함수에서만 사용가능 > .body 사용 가능
+    if (isLoading) return; // 이미 로딩 중이면 추가 요청 방지
+    setState(() {
+      isLoading = true; // 로딩 시작
+    });
+
+    var addcontent = await http.get(Uri.parse('https://codingapple1.github.io/app/more1.json')); // get
+    var addcontent2 = jsonDecode(addcontent.body);
+
+    widget.addData(addcontent2);
+    setState(() {
+      isLoading = true;
+    });
+  }
+
   @override
   void initState() { // scroll 출력
     super.initState();
     scroll.addListener(() {
-      print(scroll.position.pixels);
-      if(scroll.position.pixels == scroll.position.maxScrollExtent) {
+      if(scroll.position.pixels == scroll.position.maxScrollExtent && !isLoading) { // isloading 추가
         // scroll 얼만큼 ? == 가능한 스크롤 얼만큼 남았는지 > 맨 밑
-
+        getMore();
       }
     });
   }
@@ -109,7 +133,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if(widget.data.isNotEmpty) { // isNotEmpty = 데이터가 오지 않은 경우
-      return ListView.builder(itemCount: 3, controller: scroll, itemBuilder: (c, i) { // scroll 얼만큼?
+      return ListView.builder(itemCount: widget.data.length, controller: scroll, itemBuilder: (c, i) { // scroll 얼만큼?
         return Column( // return이 왜 존재해야 하는지?
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
