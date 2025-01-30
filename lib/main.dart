@@ -10,10 +10,16 @@ void main() {
   runApp(
       MaterialApp(
           theme: style.theme, // style 가져와서 적용시킬게요
+          // initialRoute: '/', 테스트용 루드 설정
+          // routes: {
+          //   '/' : (c) => Text('첫 페이지'),
+          // },
           home:  MyApp()
       )
   );
 }
+
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -61,7 +67,9 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
+            IconButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (c) => UpLoad() ));
+              }, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
       body: [HomePage(data : data, addData : addData), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
@@ -148,5 +156,23 @@ class _HomePageState extends State<HomePage> {
     else {
       return Text('로딩중');
     }
+  }
+}
+
+// UpLoad wiget
+class UpLoad extends StatelessWidget {
+  const UpLoad({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('이미지 업로드 화면'),
+        ],
+      ),
+    );
   }
 }
