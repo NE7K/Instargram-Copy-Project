@@ -13,6 +13,8 @@ import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart'; // shared preferences
 
+import 'package:flutter/cupertino.dart'; // cupertino IOS
+
 void main() {
   runApp(
       MaterialApp(
@@ -194,6 +196,14 @@ class _HomePageState extends State<HomePage> {
             ? Image.network(widget.data[i]['image']) // network로 출력
             : Image.file(widget.data[i]['image']), // file로 출력
 
+            GestureDetector(
+              child: Text('이름 : ${widget.data[i]['user']}'),
+              onTap: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (c) => Profile())
+                );
+              }
+            ),
             Text('좋아요 : ${widget.data[i]['likes']}'),
             Text('글쓴이 : ${widget.data[i]['user']} '),
             Text('글내용 : ${widget.data[i]['content']} '),
@@ -236,6 +246,18 @@ class UpLoad extends StatelessWidget {
           TextField(onChanged: (a) { setUserContent(a);})
         ],
       ),
+    );
+  }
+}
+
+class Profile extends StatelessWidget {
+  const Profile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Text('안녕'),
     );
   }
 }
