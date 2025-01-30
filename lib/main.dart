@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
               child: Text('이름 : ${widget.data[i]['user']}'),
               onTap: () {
                 Navigator.push(context,
-                    CupertinoPageRoute(builder: (c) => Profile())
+                  CupertinoPageRoute(builder: (c) => Profile())
                 );
               }
             ),
@@ -243,7 +243,7 @@ class UpLoad extends StatelessWidget {
         children: [
           Image.file(userImage),
           Text('글 내용'),
-          TextField(onChanged: (a) { setUserContent(a);})
+          TextField(onChanged: (a) { setUserContent(a); })
         ],
       ),
     );
