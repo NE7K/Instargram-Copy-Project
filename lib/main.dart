@@ -11,6 +11,8 @@ import 'package:flutter/rendering.dart'; // scroll 관련 import
 import 'package:image_picker/image_picker.dart'; // image import, ios info set
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart'; // shared preferences
+
 void main() {
   runApp(
       MaterialApp(
@@ -35,6 +37,13 @@ class _MyAppState extends State<MyApp> {
   var userImage;
   var userContent;
 
+  @override
+  void initState() {
+    super.initState();
+    getData(); // 앱 실행하면 data 뜯어오기
+    setData();
+  }
+
   getData() async {
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
     // 데이터 전송을 확인하려면 if statcode 200이런거 사용할 수 있음
@@ -42,12 +51,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       data = result2;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData(); // 앱 실행하면 data 뜯어오기
   }
 
   addData(a) {
@@ -75,6 +78,13 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       data.insert(0, myData);
     });
+  }
+
+  setData() async {
+    var storage = await SharedPreferences.getInstance();
+    storage.setString('name', 'johnjick');
+    var result = storage.getString('name');
+    print(result);
   }
 
   @override
