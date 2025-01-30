@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import './style.dart' as style; // style에서 파일 가져오겠읍니다
 
-import 'package:http/http.dart' as http; // http import, permission
+import 'package:http/http.dart' as http; // http import, android permission set
 import 'dart:convert';
 
 import 'package:flutter/rendering.dart'; // scroll 관련 import
+
+import 'package:image_picker/image_picker.dart'; // image import, ios info set
+import 'dart:io';
 
 void main() {
   runApp(
@@ -31,6 +36,7 @@ class _MyAppState extends State<MyApp> {
 
   var tab = 0; // tab state 상태 저장 함수
   var data = [];
+  var userImage;
 
   getData() async {
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
@@ -67,9 +73,20 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
           actions: [
-            IconButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (c) => UpLoad() ));
+            IconButton(onPressed: () async {
+              var picker = ImagePicker();
+              var image = await picker.pickImage(source: ImageSource.gallery); // 사진을 여러개 선택하고 싶으면 mult
+
+              if(image != null) { // 이미지가 null일 경우에는
+                setState(() {
+                  userImage = File(image.path);
+                });
+              }
+
+              Navigator.push(context,
+                  MaterialPageRoute ( builder: (c) => UpLoad(userImage: userImage) ));
               }, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
+
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
       body: [HomePage(data : data, addData : addData), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
@@ -161,7 +178,9 @@ class _HomePageState extends State<HomePage> {
 
 // UpLoad wiget
 class UpLoad extends StatelessWidget {
-  const UpLoad({super.key});
+  const UpLoad({super.key, this.userImage});
+
+  final userImage;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +189,9 @@ class UpLoad extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Image.file(userImage),
           Text('이미지 업로드 화면'),
+          TextField(),
         ],
       ),
     );
