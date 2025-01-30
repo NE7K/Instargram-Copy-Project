@@ -15,10 +15,6 @@ void main() {
   runApp(
       MaterialApp(
           theme: style.theme, // style 가져와서 적용시킬게요
-          // initialRoute: '/', 테스트용 루드 설정
-          // routes: {
-          //   '/' : (c) => Text('첫 페이지'),
-          // },
           home:  MyApp()
       )
   );
@@ -37,6 +33,7 @@ class _MyAppState extends State<MyApp> {
   var tab = 0; // tab state 상태 저장 함수
   var data = [];
   var userImage;
+  var userContent;
 
   getData() async {
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
@@ -56,6 +53,27 @@ class _MyAppState extends State<MyApp> {
   addData(a) {
     setState(() {
       data.add(a); // data[]에 자료 추가
+    });
+  }
+
+  setUserContext(a) {
+    setState(() {
+      userContent = a;
+    });
+  }
+
+  addMyData(){
+    var myData = {
+      'id': data.length,
+      'image': userImage,
+      'likes': 5,
+      'date': 'July 25',
+      'content': userContent,
+      'liked': false,
+      'user': 'John Kim'
+    };
+    setState(() {
+      data.insert(0, myData);
     });
   }
 
@@ -84,7 +102,12 @@ class _MyAppState extends State<MyApp> {
               }
 
               Navigator.push(context,
-                  MaterialPageRoute ( builder: (c) => UpLoad(userImage: userImage) ));
+                  MaterialPageRoute ( builder: (c) => UpLoad(
+                      userImage: userImage,
+                      userContent: userContent,
+                      addMyData: addMyData,
+                      setUserContent: setUserContext
+                  )));
               }, icon: Icon(Icons.add_box_outlined)), // 릴스, 게시물, 스토리 등등 활동 추가
 
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
@@ -120,13 +143,10 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage> {
 
   var scroll = ScrollController(); // controller
-
   var addlist = []; // 추가할 데이터 정보
-
   var isLoading = false; // 더보기 로딩 이어지는 오류 방지
 
   getMore() async { // async await은 함수에서만 사용가능 > .body 사용 가능
@@ -134,10 +154,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isLoading = true; // 로딩 시작
     });
-
     var addcontent = await http.get(Uri.parse('https://codingapple1.github.io/app/more1.json')); // get
     var addcontent2 = jsonDecode(addcontent.body);
-
     widget.addData(addcontent2);
     setState(() {
       isLoading = true;
@@ -162,7 +180,10 @@ class _HomePageState extends State<HomePage> {
         return Column( // return이 왜 존재해야 하는지?
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(widget.data[i]['image']),
+            widget.data[i]['image'].runtimeType == String // 삼항연산자 (값 ? 1번 : 2번)
+            ? Image.network(widget.data[i]['image']) // network로 출력
+            : Image.file(widget.data[i]['image']), // file로 출력
+
             Text('좋아요 : ${widget.data[i]['likes']}'),
             Text('글쓴이 : ${widget.data[i]['user']} '),
             Text('글내용 : ${widget.data[i]['content']} '),
@@ -178,20 +199,31 @@ class _HomePageState extends State<HomePage> {
 
 // UpLoad wiget
 class UpLoad extends StatelessWidget {
-  const UpLoad({super.key, this.userImage});
+  const UpLoad({super.key, this.userImage, this.userContent, this.addMyData, this.setUserContent});
 
-  final userImage;
+  final userImage; // user image
+  final userContent; // user Context
+  final addMyData;
+  final setUserContent;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('포스팅할 게시글을 작성해주세요'),
+        actions: [
+          IconButton(onPressed: () { // post button
+            addMyData();
+            Navigator.pop(context);
+            }, icon: Icon(Icons.send))
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.file(userImage),
-          Text('이미지 업로드 화면'),
-          TextField(),
+          Text('글 내용'),
+          TextField(onChanged: (a) { setUserContent(a);})
         ],
       ),
     );
