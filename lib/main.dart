@@ -17,8 +17,12 @@ import 'package:provider/provider.dart'; // provider import
 
 void main() {
   runApp(
-      ChangeNotifierProvider( // provider 사용
-        create: (c) => Store1(),
+      MultiProvider( // provider 사용
+        providers: [
+          ChangeNotifierProvider(create: (c) => Store1()),
+          ChangeNotifierProvider(create: (c) => Store2()),
+        ],
+
         child: MaterialApp(
             theme: style.theme, // style 가져와서 적용시킬게요
             home:  MyApp()
@@ -87,7 +91,6 @@ class _MyAppState extends State<MyApp> {
     var storage = await SharedPreferences.getInstance();
     storage.setString('name', 'johnjick');
     var result = storage.getString('name');
-    print(result);
   }
 
   @override
@@ -252,7 +255,33 @@ class UpLoad extends StatelessWidget {
 }
 
 class Store1 extends ChangeNotifier {
+  var follower = 0;
+  var friend = false;
+  var profileImage = [];
+
+
+  getData() async {
+      var result = await http.get(Uri.parse('https://codingapple1.github.io/app/profile.json'));
+        var result2 = jsonDecode(result.body);
+        profileImage = result2; // 데이터 할당
+        notifyListeners(); // 데이터 변경 후 리스너에 알림
+  }
+
+  follow() {
+    if (friend == false) {
+      follower++;
+      friend = true;
+    } else {
+     follower--;
+     friend = false;
+    }
+    notifyListeners();
+  }
+}
+
+class Store2 extends ChangeNotifier {
   var name = 'jothn taler';
+
   changeName() {
     name = 'test';
     notifyListeners();
@@ -266,15 +295,45 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.watch<Store1>().name),
+        title: Text(context.watch<Store2>().name),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(onPressed: () {
-            context.read<Store1>().changeName();
-          }, child: Text('버튼'))
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ProfileHeader(),
+          ),
+          SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                    (c, i) => Image.network(context.watch<Store1>().profileImage[i]),
+                childCount: context.watch<Store1>().profileImage.length,
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3))
         ],
       )
+    );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: Colors.grey,
+        ),
+        Text('팔로워 ${ context.watch<Store1>().follower}명'),
+        ElevatedButton(onPressed: () {
+          context.read<Store1>().follow;
+        }, child: Text('팔로우')),
+        ElevatedButton(onPressed: () {
+          context.read<Store1>().getData();
+        }, child: Text('사진 가져오기'))
+      ],
     );
   }
 }
