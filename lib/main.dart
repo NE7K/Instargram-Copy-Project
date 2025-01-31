@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instargramcopy/notification.dart';
 import './style.dart' as style; // style에서 파일 가져오겠읍니다
 
 import 'package:http/http.dart' as http; // http import, android permission set
@@ -14,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart'; // shared preferenc
 import 'package:flutter/cupertino.dart'; // cupertino IOS
 
 import 'package:provider/provider.dart'; // provider import
+
+import 'notification.dart';
 
 void main() {
   runApp(
@@ -49,6 +52,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     getData(); // 앱 실행하면 data 뜯어오기
     setData();
+    initNotification();
   }
 
   getData() async {
