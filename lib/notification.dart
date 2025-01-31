@@ -63,3 +63,33 @@ showNotification() async {
       NotificationDetails(android: androidDetails, iOS: iosDetails)
   );
 }
+
+showNotification2() async {
+
+  tz.initializeTimeZones();
+
+  var androidDetails = const AndroidNotificationDetails(
+    '유니크한 알림 ID',
+    '알림종류 설명',
+    priority: Priority.high,
+    importance: Importance.max,
+    color: Color.fromARGB(255, 255, 0, 0),
+  );
+  var iosDetails = const DarwinNotificationDetails(
+    presentAlert: true,
+    presentBadge: true,
+    presentSound: true,
+  );
+
+  notifications.zonedSchedule(
+      2,
+      '제목2',
+      '내용2',
+      tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
+      NotificationDetails(android: androidDetails, iOS: iosDetails),
+      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, //신버전의 경우 윗줄 대신 추가
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime
+  );
+}

@@ -16,7 +16,7 @@ import 'package:flutter/cupertino.dart'; // cupertino IOS
 
 import 'package:provider/provider.dart'; // provider import
 
-import 'notification.dart';
+import './notification.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz; // timezone control import
