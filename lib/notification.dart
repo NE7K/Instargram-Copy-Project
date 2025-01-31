@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 final notifications = FlutterLocalNotificationsPlugin();
 
@@ -85,11 +87,20 @@ showNotification2() async {
       2,
       '제목2',
       '내용2',
-      tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
+      tz.TZDateTime.now(tz.local).add(Duration(seconds: 4)),
       NotificationDetails(android: androidDetails, iOS: iosDetails),
-      androidAllowWhileIdle: true,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, //신버전의 경우 윗줄 대신 추가
       uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime
   );
+}
+
+makeDate(hour, min, sec){
+  var now = tz.TZDateTime.now(tz.local);
+  var when = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, min, sec);
+  if (when.isBefore(now)) {
+    return when.add(Duration(days: 1));
+  } else {
+    return when;
+  }
 }
