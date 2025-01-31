@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     getData(); // 앱 실행하면 data 뜯어오기
     setData();
-    initNotification();
+    initNotification(context);
   }
 
   getData() async {
@@ -100,6 +100,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        showNotification();
+      }),
       backgroundColor: Colors.white, // 배경색 지정
       appBar: AppBar(
           title: Row(
