@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import './style.dart' as style; // style에서 파일 가져오겠읍니다
 
@@ -15,11 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart'; // shared preferenc
 
 import 'package:flutter/cupertino.dart'; // cupertino IOS
 
+import 'package:provider/provider.dart'; // provider import
+
 void main() {
   runApp(
-      MaterialApp(
-          theme: style.theme, // style 가져와서 적용시킬게요
-          home:  MyApp()
+      ChangeNotifierProvider( // provider 사용
+        create: (c) => Store1(),
+        child: MaterialApp(
+            theme: style.theme, // style 가져와서 적용시킬게요
+            home:  MyApp()
+        ),
       )
   );
 }
@@ -248,14 +251,30 @@ class UpLoad extends StatelessWidget {
   }
 }
 
+class Store1 extends ChangeNotifier {
+  var name = 'jothn taler';
+  changeName() {
+    name = 'test';
+    notifyListeners();
+  }
+}
+
 class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Text('안녕'),
+      appBar: AppBar(
+        title: Text(context.watch<Store1>().name),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(onPressed: () {
+            context.read<Store1>().changeName();
+          }, child: Text('버튼'))
+        ],
+      )
     );
   }
 }
