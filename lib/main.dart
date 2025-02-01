@@ -18,8 +18,16 @@ import 'package:provider/provider.dart'; // provider import
 
 import 'notification.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // firebase import
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // flutter firebaase set
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
       MultiProvider( // provider 사용
         providers: [

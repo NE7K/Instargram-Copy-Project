@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960175995242",
+    "project_id": "fluttergram-3d261",
+    "storage_bucket": "fluttergram-3d261.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960175995242:android:ab25040621047e1d8fcd13",
+        "android_client_info": {
+          "package_name": "com.neighbrosoft.sns.instargramcopy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZO8otRWISrfLs8v4c6ud7DXHPelSxobk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
