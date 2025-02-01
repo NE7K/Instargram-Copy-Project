@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instargramcopy/notification.dart';
+import 'package:instargramcopy/shop.dart';
 import './style.dart' as style; // style에서 파일 가져오겠읍니다
 
 import 'package:http/http.dart' as http; // http import, android permission set
@@ -144,7 +145,8 @@ class _MyAppState extends State<MyApp> {
 
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
-      body: [HomePage(data : data, addData : addData), Text('검색창')][tab], // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
+      body: [HomePage(data : data, addData : addData), Shop()][tab],
+        // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false, // tab 눌렀을 때 라벨 글자 나오지 않게 설정
         showUnselectedLabels: false,
