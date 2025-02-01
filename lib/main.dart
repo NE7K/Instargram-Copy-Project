@@ -211,6 +211,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  fontsize1() {
+    if (MediaQuery.of(context).size.width > 600) {
+      return 30;
+    } else {
+      return 16;
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     if(widget.data.isNotEmpty) { // isNotEmpty = 데이터가 오지 않은 경우
@@ -233,7 +242,7 @@ class _HomePageState extends State<HomePage> {
             Text('좋아요 : ${widget.data[i]['likes']}'),
             Text('글쓴이 : ${widget.data[i]['user']} '),
             Text('글내용 : ${widget.data[i]['content']}', style: TextStyle(
-              fontSize: MediaQuery.of(context).size.width > 600 ? 30 : 16
+              fontSize: fontsize1()
             ),),
           ],
         );
