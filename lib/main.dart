@@ -109,6 +109,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    MediaQuery.of(context).size.width; // 현재 폰 가로 사이즈 lp 단위, padding top, devicepixelratio
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: () {
         showNotification();
@@ -145,7 +148,8 @@ class _MyAppState extends State<MyApp> {
 
             IconButton(onPressed: () {}, icon: Icon(Icons.menu)) ]  // 설정 및 활동
       ),
-      body: [HomePage(data : data, addData : addData), Shop()][tab],
+      body: [ // MediaQuery.of(context).size.width > 600 ? HomePageLarge() : ~
+        HomePage(data : data, addData : addData), Shop()][tab],
         // list 형식으로 간단하게 페이지 할당, future builder 사용해서 if 사용 안 할 수 있음
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false, // tab 눌렀을 때 라벨 글자 나오지 않게 설정
@@ -228,7 +232,9 @@ class _HomePageState extends State<HomePage> {
             ),
             Text('좋아요 : ${widget.data[i]['likes']}'),
             Text('글쓴이 : ${widget.data[i]['user']} '),
-            Text('글내용 : ${widget.data[i]['content']} '),
+            Text('글내용 : ${widget.data[i]['content']}', style: TextStyle(
+              fontSize: MediaQuery.of(context).size.width > 600 ? 30 : 16
+            ),),
           ],
         );
       });
