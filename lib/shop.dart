@@ -62,13 +62,18 @@ class _ShopState extends State<Shop> {
     await auth.signOut();
   }
 
+  test() async {
+    await firestore.collection('product').get();
+  }
 
   @override
   void initState() {
     super.initState();
-    getData();
-    registerUser();
-    loginUser();
+    // logOut();
+    // getData();
+    // registerUser();
+    // loginUser();
+    test(); // 차단 테스트
   }
 
   @override
